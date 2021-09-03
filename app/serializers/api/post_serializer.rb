@@ -3,7 +3,6 @@ module Api
 
     attributes :id
     attributes :description
-    has_many :likes
     belongs_to :user
 
   end
