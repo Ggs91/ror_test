@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
-  resources :users, only: [:index]
-  resources :posts, only: [:index]
+  namespace :api do
+    namespace :v1, defaults: { format: :json } do
+      resources :users, only: [:index]
+      resources :posts, only: [:index]
+    end
+  end
 end
