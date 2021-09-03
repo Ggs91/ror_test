@@ -6,7 +6,7 @@ describe 'Users API endpoint' do
     describe "#index" do
       it 'returns an array of serialized users' do
         user = FactoryBot.create :user
-        get "/users"
+        get "/api/v1/users"
 
         expect(response).to have_http_status(:successful)
         expect(JSON.parse(response.body).count).not_to eq 0
