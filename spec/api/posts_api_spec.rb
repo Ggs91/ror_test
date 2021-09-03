@@ -6,7 +6,7 @@ describe 'Posts API endpoint' do
     describe "#index" do
       it 'returns an array of serialized posts' do
         post = FactoryBot.create :post
-        get "/posts"
+        get "/api/v1/posts"
 
         expect(response).to have_http_status(:successful)
         expect(JSON.parse(response.body).count).not_to eq 0
