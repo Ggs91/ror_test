@@ -26,12 +26,4 @@ class Api::V1::CommentsController < Api::V1::BaseController
   def set_post
     @post = Post.find(params[:post_id])
   end
-
-  def page
-    params[:page] || 1
-  end
-
-  def per_page
-    params[:per_page] || 10
-  end
 end
