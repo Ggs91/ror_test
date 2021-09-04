@@ -13,7 +13,7 @@ class Api::V1::CommentsController < Api::V1::BaseController
     if comment.save
       render json: comment, serializer: Api::CommentSerializer
     else
-      render_errors([{ message: 'Comment not created', data: comment.errors }], :unprocessable_entity)
+      render json: comment, status: 422, adapter: :json_api, serializer: ActiveModel::Serializer::ErrorSerializer
     end
   end
 
