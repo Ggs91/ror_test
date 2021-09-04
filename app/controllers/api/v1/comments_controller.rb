@@ -1,11 +1,17 @@
 class Api::V1::CommentsController < Api::V1::BaseController
-  before_action :set_post, only: [:create]
+  before_action :set_post, only: [:index, :create]
+
+  def index
+    comments = @post.comments
+
+    render json: comments, each_serializer: Api::CommentSerializer
+  end
 
   def create
     comment = @post.comments.new(comment_params.merge(user: current_user))
 
     if comment.save
-      render json: { status: :success, message: 'Comment created', data: comment }, status: :ok
+      render json: comment, serializer: Api::CommentSerializer
     else
       render_errors([{ message: 'Comment not created', data: comment.errors }], :unprocessable_entity)
     end
