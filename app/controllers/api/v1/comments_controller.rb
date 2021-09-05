@@ -4,14 +4,14 @@ class Api::V1::CommentsController < Api::V1::BaseController
   def index
     comments = @post.comments.page(page).per(per_page)
 
-    render json: comments, each_serializer: Api::CommentSerializer
+    render json: comments
   end
 
   def create
     comment = @post.comments.new(comment_params.merge(user: current_user))
 
     if comment.save
-      render json: comment, serializer: Api::CommentSerializer
+      render json: comment
     else
       render json: comment, status: 422, adapter: :json_api, serializer: ActiveModel::Serializer::ErrorSerializer
     end
