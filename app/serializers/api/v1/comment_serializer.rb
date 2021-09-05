@@ -3,8 +3,8 @@ module Api
     class CommentSerializer < Api::V1::BaseSerializer
       attributes :id, :content
 
-      belongs_to :user, serializer: UserSerializer
-      belongs_to :post, serializer: PostSerializer
+      belongs_to :user
+      belongs_to :post
     end
   end
 end
