@@ -2,7 +2,7 @@ class Api::V1::CommentsController < Api::V1::BaseController
   before_action :set_post, only: [:index, :create]
 
   def index
-    comments = @post.comments.includes(:likes).page(page).per(per_page)
+    comments = @post.comments.includes(:user, :likes).page(page).per(per_page)
 
     render json: comments
   end
