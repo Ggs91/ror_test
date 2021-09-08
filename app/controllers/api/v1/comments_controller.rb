@@ -10,7 +10,7 @@ class Api::V1::CommentsController < Api::V1::BaseController
   def create
     comment = @post.comments.create!(comment_params.merge(user: current_user))
 
-    render json: comment, include: ['user', 'post']
+    render json: comment, serializer: Api::V1::StatusCreatedSerializer, status: :created
   end
 
   private
