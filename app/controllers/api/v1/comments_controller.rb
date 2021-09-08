@@ -10,7 +10,7 @@ class Api::V1::CommentsController < Api::V1::BaseController
   def create
     comment = @post.comments.create!(comment_params.merge(user: current_user))
 
-    render json: comment, serializer: Api::V1::StatusCreatedSerializer, status: :created
+    render json: comment, links: link(comment), serializer: Api::V1::StatusCreatedSerializer, status: :created
   end
 
   private
@@ -21,5 +21,9 @@ class Api::V1::CommentsController < Api::V1::BaseController
 
   def set_post
     @post = Post.find(params[:post_id])
+  end
+
+  def link(comment)
+    {self: api_v1_post_comment_url(comment.post_id, comment)}
   end
 end
