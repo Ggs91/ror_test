@@ -8,7 +8,6 @@ Rails.application.routes.draw do
           resources :likes, only: [:create], module: :comments
         end
       end
-      match '*path', to: 'base#render_not_found', via: [:get, :post]
     end
   end
 end
