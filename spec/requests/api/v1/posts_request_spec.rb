@@ -10,7 +10,7 @@ RSpec.describe 'Posts API endpoint', type: :request do
       end
 
       describe 'HTTP response status-code' do
-        it_behaves_like 'a 200 ok status code'
+        it_behaves_like 'a 200 ok status'
       end
 
       describe 'response body' do
