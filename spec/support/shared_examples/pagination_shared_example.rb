@@ -1,6 +1,6 @@
 RSpec.shared_examples 'a paginable resource' do
 
-  subject { json_body['data'].count }
+  subject { response_body['data'].count }
 
   it 'when page=1&per_page=2' do
     get path, params: { page: 1, per_page: 2 }
