@@ -25,8 +25,8 @@ RSpec.describe 'Users API endpoint', type: :request do
             }
           }
 
-          expect(json_body["data"].count).to eq(5)
-          expect(json_body['data'].first).to match(first_serialized_user)
+          expect(response_body['data'].count).to eq(5)
+          expect(response_body['data'].first).to match(first_serialized_user)
         end
       end
 
