@@ -32,8 +32,8 @@ RSpec.describe 'Posts API endpoint', type: :request do
             }
           }
 
-          expect(json_body["data"].count).to eq(5)
-          expect(json_body['data'].first).to match(first_serialized_post)
+          expect(response_body['data'].count).to eq(5)
+          expect(response_body['data'].first).to eq(first_serialized_post)
         end
       end
 
