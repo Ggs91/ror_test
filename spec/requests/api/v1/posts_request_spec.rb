@@ -6,15 +6,15 @@ RSpec.describe 'Posts API endpoint', type: :request do
       before do
         create(:post, description: 'I am the first post')
         create_list(:post, 4)
-        get api_v1_posts_path
       end
 
-      describe 'HTTP response status-code' do
-        it_behaves_like 'a 200 ok status'
+      it_behaves_like 'a 200 ok status' do
+        before { get api_v1_posts_path }
       end
 
       describe 'response body' do
         it 'returns an array of serialized posts' do
+          get api_v1_posts_path
 
           first_serialized_post = {
             "id" => "1",
