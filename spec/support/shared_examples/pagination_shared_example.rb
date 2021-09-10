@@ -12,13 +12,3 @@ RSpec.shared_examples 'a paginable resource' do
     expect(subject).to eq(3)
   end
 end
-
-
-
-
-# RSpec.shared_examples 'a paginable resource' do
-#   it 'supports pagination' do
-#     get path, params: { page: 1, per_page: 2 }
-#     expect(json_body['data'].count).to eq(2)
-#   end
-# end
