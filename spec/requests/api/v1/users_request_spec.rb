@@ -6,15 +6,15 @@ RSpec.describe 'Users API endpoint', type: :request do
       before do
         create(:user, first_name: 'Jhon', last_name: 'Doe')
         create_list(:user, 4)
-        get api_v1_users_path
       end
 
-      describe 'HTTP response status-code' do
-        it_behaves_like 'a 200 ok status'
+      it_behaves_like 'a 200 ok status' do
+        before { get api_v1_users_path }
       end
 
       describe 'response body' do
         it 'returns an array of serialized users' do
+          get api_v1_users_path
 
           first_serialized_user = {
             "id" => "1",
