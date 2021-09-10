@@ -1,0 +1,16 @@
+[1mdiff --git a/spec/support/shared_examples/http_status_codes/status_201_created.rb b/spec/support/shared_examples/http_status_codes/status_201_created.rb[m
+[1mindex 779d6e7..e18dbe3 100644[m
+[1m--- a/spec/support/shared_examples/http_status_codes/status_201_created.rb[m
+[1m+++ b/spec/support/shared_examples/http_status_codes/status_201_created.rb[m
+[36m@@ -1,5 +1,9 @@[m
+ RSpec.shared_examples 'a 201 created status' do[m
+[31m-  it 'respond with 201 created' do[m
+[31m-    expect(response).to have_http_status(:created)[m
+[32m+[m[32m  describe 'HTTP response status-code' do[m
+[32m+[m[32m    it 'respond with 201 created' do[m
+[32m+[m[32m      expect(response).to have_http_status(:created)[m
+[32m+[m[32m    end[m
+   end[m
+ end[m
+[41m+[m
+[41m+[m
