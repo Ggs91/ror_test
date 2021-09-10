@@ -4,7 +4,7 @@ module Error
 
     attr_reader :exception, :code, :status, :extra
 
-    def initialize(exception, code, status, extra= {})
+    def initialize(exception, code, status, extra={})
       @exception = exception
       @code = code
       @status = status
