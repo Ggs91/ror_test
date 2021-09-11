@@ -6,15 +6,13 @@ RSpec.describe 'Users API endpoint', type: :request do
       before do
         create(:user, first_name: 'Jhon', last_name: 'Doe')
         create_list(:user, 4)
+        get api_v1_users_path
       end
 
-      it_behaves_like 'a 200 ok status' do
-        before { get api_v1_users_path }
-      end
+      it_behaves_like 'a 200 ok status'
 
       describe 'response body' do
         it 'returns an array of serialized users' do
-          get api_v1_users_path
 
           first_serialized_user = {
             "id" => "1",
@@ -27,6 +25,11 @@ RSpec.describe 'Users API endpoint', type: :request do
 
           expect(response_body['data'].count).to eq(5)
           expect(response_body['data'].first).to match(first_serialized_user)
+        end
+
+        it 'has a "self" key' do
+          expect(response_body).to have_key('links')
+          expect(response_body['links']).to have_key('self')
         end
       end
 
