@@ -2,13 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'Comments API endpoint', type: :request do
 
-  let(:post_resource) { create(:post, description: 'I am the first post') }
+  let(:post_resource) { create(:post) }
 
   context 'GET' do
     describe "#index" do
       before do
-        create(:comment, post: post_resource, content: 'I am the first comment')
-        create_list(:comment, 4, post: post_resource)
+        create_list(:comment, 5, post: post_resource)
         get api_v1_post_comments_path(post_resource)
       end
 
