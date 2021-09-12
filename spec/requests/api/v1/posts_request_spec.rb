@@ -4,28 +4,28 @@ RSpec.describe 'Posts API endpoint', type: :request do
   context 'GET' do
     describe "#index" do
       before do
-        create(:post, description: 'I am the first post')
-        create_list(:post, 4)
+        create_list(:post, 5)
+        get api_v1_posts_path
       end
 
-      it_behaves_like 'a 200 ok status' do
-        before { get api_v1_posts_path }
-      end
+      it_behaves_like 'a 200 ok status'
 
       describe 'response body' do
         it 'returns an array of serialized posts' do
           get api_v1_posts_path
 
+          first_post = Post.first
+
           first_serialized_post = {
-            "id" => "1",
+            "id" => first_post.id.to_s,
             "type" => "posts",
             "attributes" => {
-              "description" => "I am the first post"
+              "description" => first_post.description
             },
             "relationships" => {
               "user" => {
                 "data" => {
-                  "id" => "1",
+                  "id" => first_post.user.id.to_s,
                   "type" => "users"
                 }
               }
