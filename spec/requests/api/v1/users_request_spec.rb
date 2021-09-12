@@ -4,8 +4,7 @@ RSpec.describe 'Users API endpoint', type: :request do
   context 'GET' do
     describe "#index" do
       before do
-        create(:user, first_name: 'Jhon', last_name: 'Doe')
-        create_list(:user, 4)
+        create_list(:user, 5)
         get api_v1_users_path
       end
 
@@ -14,12 +13,14 @@ RSpec.describe 'Users API endpoint', type: :request do
       describe 'response body' do
         it 'returns an array of serialized users' do
 
+          first_user = User.first
+
           first_serialized_user = {
-            "id" => "1",
+            "id" => first_user.id.to_s,
             "type" => "users",
             "attributes" => {
-              "last-name" => "Doe",
-              "first-name" => "Jhon"
+              "last-name" => first_user.last_name,
+              "first-name" => first_user.first_name
             }
           }
 
