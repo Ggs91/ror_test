@@ -55,6 +55,7 @@ group :test do
   gem 'rspec-sidekiq'
   gem 'shoulda'
   gem 'vcr'
+  gem 'jsonapi-rspec'
 end
 
 
