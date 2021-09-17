@@ -11,26 +11,21 @@ RSpec.describe 'Users API endpoint', type: :request do
       it_behaves_like 'a 200 ok status'
 
       describe 'response body' do
-        it 'returns an array of serialized users' do
+        describe '"data" attribute' do
+          it 'contains the list of requested users' do
+            expect(response_body['data'].count).to eq(5)
+          end
 
-          first_user = User.first
+          describe 'a serialized user' do
+            subject { response_body['data'].first }
 
-          first_serialized_user = {
-            "id" => first_user.id.to_s,
-            "type" => "users",
-            "attributes" => {
-              "last-name" => first_user.last_name,
-              "first-name" => first_user.first_name
-            }
-          }
+            let(:first_user) { User.first }
 
-          expect(response_body['data'].count).to eq(5)
-          expect(response_body['data'].first).to match(first_serialized_user)
-        end
-
-        it 'has a "self" key' do
-          expect(response_body).to have_key('links')
-          expect(response_body['links']).to have_key('self')
+            it { is_expected.to have_id(first_user.id.to_s) }
+            it { is_expected.to have_type('users') }
+            it { is_expected.to have_attribute('last-name').with_value(first_user.last_name) }
+            it { is_expected.to have_attribute('first-name').with_value(first_user.first_name) }
+          end
         end
       end
 

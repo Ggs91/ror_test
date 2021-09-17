@@ -11,29 +11,28 @@ RSpec.describe 'Posts API endpoint', type: :request do
       it_behaves_like 'a 200 ok status'
 
       describe 'response body' do
-        it 'returns an array of serialized posts' do
-          get api_v1_posts_path
+        describe '"data" attribute' do
 
-          first_post = Post.first
+          it 'contains the list of requested posts' do
+            expect(response_body['data'].count).to eq(5)
+          end
 
-          first_serialized_post = {
-            "id" => first_post.id.to_s,
-            "type" => "posts",
-            "attributes" => {
-              "description" => first_post.description
-            },
-            "relationships" => {
-              "user" => {
-                "data" => {
-                  "id" => first_post.user.id.to_s,
-                  "type" => "users"
+          describe 'a serialized post' do
+            subject { response_body['data'].first }
+
+            before { get api_v1_posts_path }
+
+            let(:first_post) { Post.first }
+
+            it { is_expected.to have_id(first_post.id.to_s) }
+            it { is_expected.to have_type('posts') }
+            it { is_expected.to have_attribute('description').with_value(first_post.description) }
+            it { is_expected.to have_relationship('user').with_data({
+                                                           'id' => first_post.user.id.to_s,
+                                                           'type' => 'users'
+                                                          })
                 }
-              }
-            }
-          }
-
-          expect(response_body['data'].count).to eq(5)
-          expect(response_body['data'].first).to eq(first_serialized_post)
+          end
         end
       end
 

@@ -13,50 +13,56 @@ RSpec.describe 'Comments API endpoint', type: :request do
 
       it_behaves_like 'a 200 ok status'
 
-      describe "response body" do
-        it 'returns an array of serialized comments' do
+      describe 'response body' do
+        describe '"data" attribute' do
+          it 'contains the list of requested comments' do
+            expect(response_body['data'].count).to eq(5)
+          end
 
-          first_comment_serialized = {
-            "id" => post_resource.comments.first.id.to_s,
-            "type" => "comments",
-            "attributes" => {
-              "content" => post_resource.comments.first.content,
-              "liked" => false,
-              "total-likes" => 0
-            },
-            "relationships" => {
-              "user" => {
-                "data" => {
-                  "id" => post_resource.comments.first.user.id.to_s,
-                  "type" => "users"
+          describe 'a serialized comment' do
+            subject { response_body['data'].first }
+
+            it { is_expected.to have_id(post_resource.comments.first.id.to_s) }
+            it { is_expected.to have_type('comments') }
+            it { is_expected.to have_jsonapi_attributes('content', 'liked', 'total-likes') }
+            it { is_expected.to have_attribute('content').with_value(post_resource.comments.first.content) }
+            it { is_expected.to have_relationships('user', 'post') }
+            it { is_expected.to have_relationship('user').with_data({
+                                                           'id' => post_resource.comments.first.user.id.to_s,
+                                                           'type' => 'users'
+                                                          })
                 }
-              },
-              "post" => {
-                "data" => {
-                  "id" => post_resource.id.to_s,
-                  "type" => "posts"
+            it { is_expected.to have_relationship('post').with_data({
+                                                           'id' => post_resource.id.to_s,
+                                                           'type' => 'posts'
+                                                          })
                 }
-              }
-            }
-          }
-
-          expect(response_body['data'].count).to eq(5)
-          expect(response_body['data'].first).to eq(first_comment_serialized)
+          end
         end
 
-        it 'includes the associated objects' do
-          expect(response_body).to have_key('included')
-          expect(response_body['included']).not_to eq(0)
+        describe '"included" attribute' do
+          it 'has an included attribute' do
+            expect(response_body).to have_key('included')
+          end
+
+          it 'includes the associated objects' do
+            expect(response_body['included']).not_to eq(0)
+          end
         end
 
-        it 'has a "self" key' do
-          expect(response_body).to have_key('links')
-          expect(response_body['links']).to have_key('self')
-        end
-      end
+        describe '"links" attribute' do
+          it 'has a links attribute' do
+            expect(response_body).to have_key('links')
+          end
 
-      it_behaves_like 'a paginable resource' do
-        let(:path) { api_v1_post_comments_path(post_resource) }
+          it 'has a "self" key' do
+            expect(response_body['links']).to have_key('self')
+          end
+        end
+
+        it_behaves_like 'a paginable resource' do
+          let(:path) { api_v1_post_comments_path(post_resource) }
+        end
       end
     end
   end
@@ -67,35 +73,34 @@ RSpec.describe 'Comments API endpoint', type: :request do
 
       before { post api_v1_post_comments_path(post_resource), params: params }
 
-      context ' when successful request' do
+      context 'when successful request' do
+        let(:created_comment) { Comment.last }
+
         it_behaves_like 'a 201 created status'
 
         it 'creates a comment for a post' do
           expect { post api_v1_post_comments_path(post_resource), params: params }.to change(post_resource.comments, :count).by(1)
         end
 
-        it 'responds with the created comment object serialized' do
+        describe 'response body' do
+          describe '"links" attribute' do
+            it 'has a "self" key' do
+              expect(response_body['links']['self']).to eq("http://#{host}/api/v1/posts/#{post_resource.id}/comments/#{created_comment.id}")
+            end
+          end
 
-          created_comment = Comment.last
+          describe '"data" attribute' do
+            subject { response_body['data'] }
 
-          last_comment_serialized = {
-              "data" => {
-                "id" => created_comment.id.to_s,
-                "type" => "comments",
-                "attributes" => {
-                  "content" => created_comment.content,
-                  "user-id" => created_comment.user.id,
-                  "post-id" => created_comment.post.id,
-                  "created-at" => created_comment.created_at.as_json,
-                  "updated-at" => created_comment.updated_at.as_json,
-                  "likes-count" => 0
-                },
-              },
-              "links" => {
-                "self" => "http://#{host}/api/v1/posts/#{post_resource.id}/comments/#{created_comment.id}"
-              }
-          }
-          expect(response_body).to eq(last_comment_serialized)
+            it { is_expected.to have_id(created_comment.id.to_s) }
+            it { is_expected.to have_type('comments') }
+            it { is_expected.to have_attribute('content').with_value(created_comment.content) }
+            it { is_expected.to have_attribute('user-id').with_value(created_comment.user.id) }
+            it { is_expected.to have_attribute('post-id').with_value(created_comment.post.id) }
+            it { is_expected.to have_attribute('created-at').with_value(created_comment.created_at.as_json) }
+            it { is_expected.to have_attribute('updated-at').with_value(created_comment.updated_at.as_json) }
+            it { is_expected.to have_attribute('likes-count').with_value(0) }
+          end
         end
       end
 
